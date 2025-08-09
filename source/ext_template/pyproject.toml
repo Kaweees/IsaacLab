@@ -5,10 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 dependencies = [
-  "torch",
-  "torchvision",
   "isaacsim[all,extscache]==5.0.0",
   "isaaclab[all,isaacsim]>=2.2.0",
+  "torch>=2.7.0",
+  "torchvision>=0.22.0",
 ]
 [build-system]
 requires = ["setuptools", "wheel", "toml"]
