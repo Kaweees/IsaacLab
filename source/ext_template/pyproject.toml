@@ -3,13 +3,8 @@ name = "your_isaaclab_extension"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.10,<3.11"
-dependencies = [
-  "torch",
-  "torchvision",
-  "isaacsim[all,extscache]==4.5.0",
-  "isaaclab[isaacsim,all]==2.1.0",
-]
+requires-python = ">=3.11,<3.12"
+dependencies = ["torch", "torchvision", "isaacsim==5.0.0", "isaaclab>=2.2.0"]
 
 [build-system]
 requires = ["setuptools", "wheel", "toml"]
@@ -21,5 +16,5 @@ isaaclab = { index = "nvidia" }
 
 [[tool.uv.index]]
 name = "nvidia"
-url = "https://pypi.nvidia.com"
+url = "https://pypi.nvidia.com/"
 explicit = true
