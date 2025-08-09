@@ -1,131 +1,198 @@
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-<div align="left">
+# Template for Isaac Lab Projects
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
+[![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
+[![Isaac Lab](https://img.shields.io/badge/IsaacLab-2.1.0-silver)](https://isaac-sim.github.io/IsaacLab)
+[![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://docs.python.org/3/whatsnew/3.10.html)
+[![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/20.04/)
+[![Windows platform](https://img.shields.io/badge/platform-windows--64-orange.svg)](https://www.microsoft.com/en-us/)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/license/mit)
 
-</div>
+## Overview
 
-<a href="https://github.com/Kaweees/isaacsim">
-   <img alt="NVIDIA Dark Mode Logo" src="assets/img/nvidia-dark.png" align="right" width="150" media="(prefers-color-scheme: dark)">
-</a>
+This repository serves as a template for building projects or extensions based on Isaac Lab. It allows you to develop in an isolated environment, outside of the core Isaac Lab repository.
 
-<div align="left">
-  <h1><em><a href="https://github.com/Kaweees/isaacsim">~isaacsim</a></em></h1>
-</div>
+**Key Features:**
 
-<!-- ABOUT THE PROJECT -->
+- `Isolation` Work outside the core Isaac Lab repository, ensuring that your development efforts remain self-contained.
+- `Flexibility` This template is set up to allow your code to be run as an extension in Omniverse.
 
-A template for developing production-ready robotics applications on [NVIDIA Isaac Sim](https://developer.nvidia.com/isaac/sim).
+**Keywords:** extension, template, isaaclab
 
-### Built With
+## Installation
 
-[![Isaac Sim][Isaac-Sim-shield]][Isaac-Sim-url]
-[![ROS2][ROS2-shield]][ROS2-url]
-[![C++][C++-shield]][C++-url]
-[![Python][Python-shield]][Python-url]
+- Install Isaac Lab by following the [installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html). We recommend using the conda installation as it simplifies calling Python scripts from the terminal.
 
-<!-- GETTING STARTED -->
+- Clone this repository separately from the Isaac Lab installation (i.e. outside the `IsaacLab` directory):
 
-## Getting Started
+```bash
+# Option 1: HTTPS
+git clone https://github.com/isaac-sim/IsaacLabExtensionTemplate.git
 
-### Prerequisites
-
-Before attempting to build this project, make sure you have [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine.
-
-### Installation
-
-To get a local copy of the project up and running on your machine, follow these simple steps:
-
-1. Clone the project repository
-
-   ```sh
-   git clone https://github.com/Kaweees/isaacsim.git
-   cd isaacsim/
-   ```
-
-2. Install the environment
-
-   ```sh
-   make
-   ```
-
-3. Create a new ROS2 workspace
-
-   ```sh
-   mkdir -p ros2_ws/src
-   cd ros2_ws
-   ```
-
-4. Create a new ROS2 package
-
-   ```sh
-   ros2 pkg create <package_name> --build-type ament_cmake --dependencies rclcpp rclpy std_msgs # C++
-   ros2 pkg create <package_name> --build-type ament_python # Python
-   ```
-
-5. Build the package
-
-   ```sh
-   colcon build --packages-select <package_name>
-   ```
-
-6. Source the project
-
-   ```sh
-   source install/setup.bash   # if using bash
-   # OR
-   source install/setup.zsh    # if using zsh
-   ```
-
-7. Run the package node
-
-   ```sh
-   ros2 run <package_name> <node_name>
-   ```
-
-<!-- PROJECT FILE STRUCTURE -->
-
-## Project Structure
-
-```sh
-isaacsim/
-├── include/                       - project header files
-├── src/                           - project source files
-│   └── main.c                     - Entry point, main function
-├── CMakeLists.txt                 - CMake build script
-├── LICENSE                        - project license
-└── README.md                      - you are here
+# Option 2: SSH
+git clone git@github.com:isaac-sim/IsaacLabExtensionTemplate.git
 ```
 
-## License
+- Throughout the repository, the name `ext_template` only serves as an example and we provide a script to rename all the references to it automatically:
 
-The source code for this project is distributed under the terms of the GNU General Public License v3.0, as I firmly believe that collaborating on free and open-source software fosters innovations that mutually and equitably beneficial to both collaborators and users alike. See [`LICENSE`](./LICENSE) for details and more information.
+```bash
+# Enter the repository
+cd IsaacLabExtensionTemplate
+# Rename all occurrences of ext_template (in files/directories) to your_fancy_extension_name
+python scripts/rename_template.py your_fancy_extension_name
+```
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/Kaweees/isaacsim.svg?style=for-the-badge
-[contributors-url]: https://github.com/Kaweees/isaacsim/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/Kaweees/isaacsim.svg?style=for-the-badge
-[forks-url]: https://github.com/Kaweees/isaacsim/network/members
-[stars-shield]: https://img.shields.io/github/stars/Kaweees/isaacsim.svg?style=for-the-badge
-[stars-url]: https://github.com/Kaweees/isaacsim/stargazers
+- Using a python interpreter that has Isaac Lab installed, install the library
 
-<!-- MARKDOWN SHIELD BAGDES & LINKS -->
-<!-- https://github.com/Ileriayo/markdown-badges -->
-[Isaac-Sim-shield]: https://img.shields.io/badge/NVIDIA%20Isaac%20Sim-%23008080.svg?style=for-the-badge&logo=nvidia&logoColor=76B900&labelColor=222222&color=76B900
-[Isaac-Sim-url]: https://developer.nvidia.com/isaac/sim
-[ROS2-shield]: https://img.shields.io/badge/ROS2-%23008080.svg?style=for-the-badge&logo=ros&logoColor=22314E&labelColor=222222&color=22314E
-[ROS2-url]: https://www.ros.org/
-[C++-shield]: https://img.shields.io/badge/C++-%23008080.svg?style=for-the-badge&logo=c%2B%2B&logoColor=004482&labelColor=222222&color=004482
-[C++-url]: https://isocpp.org/
-[Python-shield]: https://img.shields.io/badge/Python-%23008080.svg?style=for-the-badge&logo=python&logoColor=FFDD54&labelColor=222222&color=306998
-[Python-url]: https://www.python.org/
+```bash
+python -m pip install -e source/ext_template
+```
+
+- Verify that the extension is correctly installed by running the following command:
+
+```bash
+python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0
+```
+
+### Set up IDE (Optional)
+
+To setup the IDE, please follow these instructions:
+
+- Run VSCode Tasks, by pressing `Ctrl+Shift+P`, selecting `Tasks: Run Task` and running the `setup_python_env` in the drop down menu. When running this task, you will be prompted to add the absolute path to your Isaac Sim installation.
+
+If everything executes correctly, it should create a file .python.env in the `.vscode` directory. The file contains the python paths to all the extensions provided by Isaac Sim and Omniverse. This helps in indexing all the python modules for intelligent suggestions while writing code.
+
+### Setup as Omniverse Extension (Optional)
+
+We provide an example UI extension that will load upon enabling your extension defined in `source/ext_template/ext_template/ui_extension_example.py`.
+
+To enable your extension, follow these steps:
+
+1. **Add the search path of your repository** to the extension manager:
+    - Navigate to the extension manager using `Window` -> `Extensions`.
+    - Click on the **Hamburger Icon** (☰), then go to `Settings`.
+    - In the `Extension Search Paths`, enter the absolute path to `IsaacLabExtensionTemplate/source`
+    - If not already present, in the `Extension Search Paths`, enter the path that leads to Isaac Lab's extension directory directory (`IsaacLab/source`)
+    - Click on the **Hamburger Icon** (☰), then click `Refresh`.
+
+2. **Search and enable your extension**:
+    - Find your extension under the `Third Party` category.
+    - Toggle it to enable your extension.
+
+## Docker setup
+
+### Building Isaac Lab Base Image
+
+Currently, we don't have the Docker for Isaac Lab publicly available. Hence, you'd need to build the docker image
+for Isaac Lab locally by following the steps [here](https://isaac-sim.github.io/IsaacLab/main/source/deployment/index.html).
+
+Once you have built the base Isaac Lab image, you can check it exists by doing:
+
+```bash
+docker images
+
+# Output should look something like:
+#
+# REPOSITORY                       TAG       IMAGE ID       CREATED          SIZE
+# isaac-lab-base                   latest    28be62af627e   32 minutes ago   18.9GB
+```
+
+### Building Isaac Lab Template Image
+
+Following above, you can build the docker container for this project. It is called `isaac-lab-template`. However,
+you can modify this name inside the [`docker/docker-compose.yaml`](docker/docker-compose.yaml).
+
+```bash
+cd docker
+docker compose --env-file .env.base --file docker-compose.yaml build isaac-lab-template
+```
+
+You can verify the image is built successfully using the same command as earlier:
+
+```bash
+docker images
+
+# Output should look something like:
+#
+# REPOSITORY                       TAG       IMAGE ID       CREATED             SIZE
+# isaac-lab-template               latest    00b00b647e1b   2 minutes ago       18.9GB
+# isaac-lab-base                   latest    892938acb55c   About an hour ago   18.9GB
+```
+
+### Running the container
+
+After building, the usual next step is to start the containers associated with your services. You can do this with:
+
+```bash
+docker compose --env-file .env.base --file docker-compose.yaml up
+```
+
+This will start the services defined in your `docker-compose.yaml` file, including isaac-lab-template.
+
+If you want to run it in detached mode (in the background), use:
+
+```bash
+docker compose --env-file .env.base --file docker-compose.yaml up -d
+```
+
+### Interacting with a running container
+
+If you want to run commands inside the running container, you can use the `exec` command:
+
+```bash
+docker exec --interactive --tty -e DISPLAY=${DISPLAY} isaac-lab-template /bin/bash
+```
+
+### Shutting down the container
+
+When you are done or want to stop the running containers, you can bring down the services:
+
+```bash
+docker compose --env-file .env.base --file docker-compose.yaml down
+```
+
+This stops and removes the containers, but keeps the images.
+
+## Code formatting
+
+We have a pre-commit template to automatically format your code.
+To install pre-commit:
+
+```bash
+pip install pre-commit
+```
+
+Then you can run pre-commit with:
+
+```bash
+pre-commit run --all-files
+```
+
+## Troubleshooting
+
+### Pylance Missing Indexing of Extensions
+
+In some VsCode versions, the indexing of part of the extensions is missing. In this case, add the path to your extension in `.vscode/settings.json` under the key `"python.analysis.extraPaths"`.
+
+```json
+{
+    "python.analysis.extraPaths": [
+        "<path-to-ext-repo>/source/ext_template"
+    ]
+}
+```
+
+### Pylance Crash
+
+If you encounter a crash in `pylance`, it is probable that too many files are indexed and you run out of memory.
+A possible solution is to exclude some of omniverse packages that are not used in your project.
+To do so, modify `.vscode/settings.json` and comment out packages under the key `"python.analysis.extraPaths"`
+Some examples of packages that can likely be excluded are:
+
+```json
+"<path-to-isaac-sim>/extscache/omni.anim.*"         // Animation packages
+"<path-to-isaac-sim>/extscache/omni.kit.*"          // Kit UI tools
+"<path-to-isaac-sim>/extscache/omni.graph.*"        // Graph UI tools
+"<path-to-isaac-sim>/extscache/omni.services.*"     // Services tools
+...
+```
