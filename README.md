@@ -57,7 +57,8 @@ python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0
 ```bash
 uv run python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0 --headless
 uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Flat-Spot-v0 --num_envs 4096 --headless --video --enable_cameras
-uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras
+uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras --logger=tensorboard
+uv run tensorboard --logdir logs/rsl_rl/unitree_go2_rough
 ```
 
 ### Set up IDE (Optional)
