@@ -7,8 +7,14 @@
 
 """Launch Isaac Sim Simulator first."""
 
+# Set the environment variable to accept the EULA
+
 import argparse
 import sys
+
+# Omniverse License Agreement (EULA) acceptance
+import os
+os.environ["OMNI_KIT_ACCEPT_EULA"] = "YES"
 
 from isaaclab.app import AppLauncher
 
