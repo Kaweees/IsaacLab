@@ -1,6 +1,19 @@
+[project]
+name = "go2_rl"
+version = "0.1.0"
+description = "GO2-RL related utilities"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.16.0",
+]
+
 [build-system]
 requires = ["setuptools", "toml"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["source"]
 
 [tool.isort]
 
