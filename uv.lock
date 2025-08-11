@@ -10,7 +10,7 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "go2-rl",
+    "isaaclab-extension-template",
     "your-isaaclab-extension",
 ]
 
@@ -578,17 +578,6 @@ wheels = [
 ]
 
 [[package]]
-name = "go2-rl"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "typer" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "typer", specifier = ">=0.16.0" }]
-
-[[package]]
 name = "grpcio"
 version = "1.74.0"
 source = { registry = "https://pypi.org/simple" }
@@ -845,6 +834,17 @@ all = [
 isaacsim = [
     { name = "isaacsim", extra = ["all", "extscache"] },
 ]
+
+[[package]]
+name = "isaaclab-extension-template"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "typer", specifier = ">=0.16.0" }]
 
 [[package]]
 name = "isaacsim"

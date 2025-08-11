@@ -54,6 +54,12 @@ python -m pip install -e source/ext_template
 python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0
 ```
 
+```bash
+uv run python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0 --headless
+uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Flat-Spot-v0 --num_envs 4096 --headless --video --enable_cameras
+uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras
+```
+
 ### Set up IDE (Optional)
 
 To setup the IDE, please follow these instructions:

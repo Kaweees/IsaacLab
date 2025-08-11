@@ -1,7 +1,7 @@
 [project]
-name = "go2_rl"
+name = "isaaclab_extension_template"
 version = "0.1.0"
-description = "GO2-RL related utilities"
+description = "Isaac Lab Extension Template"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
