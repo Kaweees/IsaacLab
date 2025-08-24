@@ -5,6 +5,12 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["source"]
 
+[tool.uv.workspace]
+members = [
+  "source/*"
+]
+exclude = ["source/*.egg-info"]
+
 [project]
 name = "isaaclab_extension_template"
 version = "0.1.0"
@@ -12,7 +18,7 @@ description = "Isaac Lab Extension Template"
 authors = [
   { name = "Miguel Villa Floran", email = "miguel.villafloran@gmail.com" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11,<3.12"
 readme = "README.md"
 license = { file = "LICENSE" }
 
@@ -107,8 +113,3 @@ reportMissingModuleSource = "none" # -> most common: prettytable in mdp managers
 reportGeneralTypeIssues = "none"       # -> raises 218 errors (usage of literal MISSING in dataclasses)
 reportOptionalMemberAccess = "warning" # -> raises 8 errors
 reportPrivateUsage = "warning"
-
-[tool.uv.workspace]
-members = [
-  "source/*"
-]
