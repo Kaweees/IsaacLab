@@ -154,6 +154,9 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     # run training
     ppo_runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
 
+    # get the trained policy for export
+    policy = ppo_runner.get_inference_policy(device=ppo_runner.device)
+
     # optionally export to ONNX
     if args_cli.export_onnx:
         # create export directory
@@ -162,7 +165,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
         print("[INFO] Exporting trained model to ONNX format...")
         export_policy_as_onnx(
-            ppo_runner.alg.actor_critic,
+            policy,
             normalizer=ppo_runner.obs_normalizer,
             path=export_dir,
             filename=args_cli.output_name,
@@ -179,7 +182,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         jit_filename = f"{args_cli.output_name}.pt"
         print(f"[INFO] Exporting policy to TorchScript: {jit_filename}")
         export_policy_as_jit(
-            ppo_runner.alg.actor_critic,
+            policy,
             ppo_runner.obs_normalizer,
             path=export_dir,
             filename=jit_filename,
