@@ -155,7 +155,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     ppo_runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
 
     # get the trained policy for export
-    policy = ppo_runner.get_inference_policy(device=ppo_runner.device)
+    policy = ppo_runner.alg.actor_critic
 
     # optionally export to ONNX
     if args_cli.export_onnx:
