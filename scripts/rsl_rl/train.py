@@ -32,6 +32,13 @@ parser.add_argument("--num_envs", type=int, default=None, help="Number of enviro
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
 parser.add_argument("--max_iterations", type=int, default=None, help="RL Policy training iterations.")
+parser.add_argument("--output_name", type=str, default="policy", help="Name of the exported model.")
+parser.add_argument(
+    "--export_onnx", action="store_true", default=False, help="Export the trained model to ONNX format."
+)
+parser.add_argument(
+    "--export_jit", action="store_true", default=False, help="Also export model as TorchScript (.pt) file."
+)
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -67,7 +74,7 @@ from isaaclab.envs import (
 )
 from isaaclab.utils.dict import print_dict
 from isaaclab.utils.io import dump_pickle, dump_yaml
-from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
+from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_jit, export_policy_as_onnx
 from isaaclab_tasks.utils import get_checkpoint_path
 from isaaclab_tasks.utils.hydra import hydra_task_config
 
@@ -127,16 +134,16 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     env = RslRlVecEnvWrapper(env)
 
     # create runner from rsl-rl
-    runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
+    ppo_runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
     # write git state to logs
-    runner.add_git_repo_to_log(__file__)
+    ppo_runner.add_git_repo_to_log(__file__)
     # save resume path before creating a new log_dir
     if agent_cfg.resume:
         # get path to previous checkpoint
         resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
         print(f"[INFO]: Loading model checkpoint from: {resume_path}")
         # load previously trained model
-        runner.load(resume_path)
+        ppo_runner.load(resume_path)
 
     # dump the configuration into log-directory
     dump_yaml(os.path.join(log_dir, "params", "env.yaml"), env_cfg)
@@ -145,7 +152,53 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     dump_pickle(os.path.join(log_dir, "params", "agent.pkl"), agent_cfg)
 
     # run training
-    runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
+    ppo_runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
+
+    # optionally export to ONNX
+    if args_cli.export_onnx:
+        # create export directory
+        export_dir = os.path.join(log_dir, "exported")
+        os.makedirs(export_dir, exist_ok=True)
+
+        print("[INFO] Exporting trained model to ONNX format...")
+        export_policy_as_onnx(
+            ppo_runner.alg.actor_critic,
+            normalizer=ppo_runner.obs_normalizer,
+            path=export_dir,
+            filename=args_cli.output_name,
+            verbose=args_cli.verbose,
+        )
+        print(f"[INFO] ONNX model exported successfully to: {os.path.join(export_dir, args_cli.output_name)}.onnx")
+
+    # optionally export to JIT
+    if args_cli.export_jit:
+        # create export directory
+        export_dir = os.path.join(log_dir, "exported")
+        os.makedirs(export_dir, exist_ok=True)
+
+        jit_filename = f"{args_cli.output_name}.pt"
+        print(f"[INFO] Exporting policy to TorchScript: {jit_filename}")
+        export_policy_as_jit(
+            ppo_runner.alg.actor_critic,
+            ppo_runner.obs_normalizer,
+            path=export_dir,
+            filename=jit_filename,
+            verbose=args_cli.verbose,
+        )
+        print(f"[INFO] TorchScript model exported successfully to: {os.path.join(export_dir, jit_filename)}")
+
+    # print model information
+    if args_cli.verbose:
+        print("\n[INFO] Model Information:")
+        print(f"  - Observation shape: {env.observation_space.shape}")
+        print(f"  - Action shape: {env.action_space.shape}")
+        print(f"  - Device: {agent_cfg.device}")
+
+        # Get input/output dimensions
+        obs_dim = env.observation_space.shape[0]
+        act_dim = env.action_space.shape[0]
+        print(f"  - Input dimension: {obs_dim}")
+        print(f"  - Output dimension: {act_dim}")
 
     # close the simulator
     env.close()
