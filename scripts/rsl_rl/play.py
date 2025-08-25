@@ -2,12 +2,19 @@
 
 """Launch Isaac Sim Simulator first."""
 
+
 import argparse
+import os
+
+# Omniverse License Agreement (EULA) acceptance
+os.environ["OMNI_KIT_ACCEPT_EULA"] = "YES"
+
 
 from isaaclab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
+
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -18,6 +25,13 @@ parser.add_argument(
 )
 parser.add_argument("--num_envs", type=int, default=None, help="Number of environments to simulate.")
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
+parser.add_argument("--output_name", type=str, default="policy", help="Name of the exported model.")
+parser.add_argument(
+    "--export_onnx", action="store_true", default=False, help="Export the trained model to ONNX format."
+)
+parser.add_argument(
+    "--export_jit", action="store_true", default=False, help="Also export model as TorchScript (.pt) file."
+)
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -94,12 +108,30 @@ def main():
 
     # export policy to onnx/jit
     export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
-    export_policy_as_jit(
-        ppo_runner.alg.actor_critic, ppo_runner.obs_normalizer, path=export_model_dir, filename="policy.pt"
-    )
-    export_policy_as_onnx(
-        ppo_runner.alg.actor_critic, normalizer=ppo_runner.obs_normalizer, path=export_model_dir, filename="policy.onnx"
-    )
+    # optionally export to ONNX
+    if args_cli.export_onnx:
+        output_name = f"{args_cli.output_name}.onnx"
+        print(f"[INFO] Exporting policy to ONNX format: {output_name}")
+        export_policy_as_onnx(
+            ppo_runner.alg.policy,
+            normalizer=ppo_runner.obs_normalizer,
+            path=export_model_dir,
+            filename=output_name,
+            verbose=args_cli.verbose,
+        )
+        print(f"[INFO] ONNX model exported successfully to: {os.path.join(export_model_dir, output_name)}")
+
+    # optionally export to JIT
+    if args_cli.export_jit:
+        output_name = f"{args_cli.output_name}.pt"
+        print(f"[INFO] Exporting policy to TorchScript: {output_name}")
+        export_policy_as_jit(
+            ppo_runner.alg.policy,
+            normalizer=ppo_runner.obs_normalizer,
+            path=export_model_dir,
+            filename=output_name,
+        )
+        print(f"[INFO] TorchScript model exported successfully to: {os.path.join(export_model_dir, output_name)}")
 
     # reset environment
     obs, _ = env.get_observations()

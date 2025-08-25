@@ -32,13 +32,7 @@ parser.add_argument("--num_envs", type=int, default=None, help="Number of enviro
 parser.add_argument("--task", type=str, default=None, help="Name of the task.")
 parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
 parser.add_argument("--max_iterations", type=int, default=None, help="RL Policy training iterations.")
-parser.add_argument("--output_name", type=str, default="policy", help="Name of the exported model.")
-parser.add_argument(
-    "--export_onnx", action="store_true", default=False, help="Export the trained model to ONNX format."
-)
-parser.add_argument(
-    "--export_jit", action="store_true", default=False, help="Also export model as TorchScript (.pt) file."
-)
+
 # append RSL-RL cli arguments
 cli_args.add_rsl_rl_args(parser)
 # append AppLauncher cli args
@@ -74,7 +68,7 @@ from isaaclab.envs import (
 )
 from isaaclab.utils.dict import print_dict
 from isaaclab.utils.io import dump_pickle, dump_yaml
-from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_jit, export_policy_as_onnx
+from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
 from isaaclab_tasks.utils import get_checkpoint_path
 from isaaclab_tasks.utils.hydra import hydra_task_config
 
@@ -153,42 +147,6 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
 
     # run training
     ppo_runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
-
-    # get the trained policy for export
-    policy = ppo_runner.alg.actor_critic
-
-    # optionally export to ONNX
-    if args_cli.export_onnx:
-        # create export directory
-        export_dir = os.path.join(log_dir, "exported")
-        os.makedirs(export_dir, exist_ok=True)
-
-        print("[INFO] Exporting trained model to ONNX format...")
-        export_policy_as_onnx(
-            policy,
-            normalizer=ppo_runner.obs_normalizer,
-            path=export_dir,
-            filename=args_cli.output_name,
-            verbose=args_cli.verbose,
-        )
-        print(f"[INFO] ONNX model exported successfully to: {os.path.join(export_dir, args_cli.output_name)}.onnx")
-
-    # optionally export to JIT
-    if args_cli.export_jit:
-        # create export directory
-        export_dir = os.path.join(log_dir, "exported")
-        os.makedirs(export_dir, exist_ok=True)
-
-        jit_filename = f"{args_cli.output_name}.pt"
-        print(f"[INFO] Exporting policy to TorchScript: {jit_filename}")
-        export_policy_as_jit(
-            policy,
-            ppo_runner.obs_normalizer,
-            path=export_dir,
-            filename=jit_filename,
-            verbose=args_cli.verbose,
-        )
-        print(f"[INFO] TorchScript model exported successfully to: {os.path.join(export_dir, jit_filename)}")
 
     # print model information
     if args_cli.verbose:

@@ -51,14 +51,12 @@ python -m pip install -e source/ext_template
 - Verify that the extension is correctly installed by running the following command:
 
 ```bash
-python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0
+uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras --logger=tensorboard
+uv run tensorboard --logdir logs/rsl_rl/unitree_go2_rough
 ```
 
 ```bash
-uv run python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0 --headless
-uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Flat-Spot-v0 --num_envs 4096 --headless --video --enable_cameras
-uv run python scripts/rsl_rl/train.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras --logger=tensorboard --export_onnx --output_name=model --export_jit
-uv run tensorboard --logdir logs/rsl_rl/unitree_go2_rough
+uv run python scripts/rsl_rl/play.py --task=Isaac-Velocity-Rough-Unitree-Go2-v0 --num_envs 4096 --headless --video --enable_cameras --logger=tensorboard --output_name=model --export_onnx --export_jit
 ```
 
 ### Set up IDE (Optional)
