@@ -11,6 +11,7 @@
 !Dockerfile
 !Makefile
 !README.md
+!LICENSE
 
 !.github/
 !.github/**/
