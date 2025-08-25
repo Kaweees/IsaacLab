@@ -23,9 +23,22 @@ readme = "README.md"
 license = { file = "LICENSE" }
 
 dependencies = [
+    "isaacsim[all,extscache]==5.0.0",
+    "isaaclab[all,isaacsim]>=2.2.0",
+    "torch>=2.7.0",
+    "torchvision>=0.22.0",
     "tensorboard>=2.20.0",
     "typer>=0.16.0",
 ]
+
+[tool.uv.sources]
+isaacsim = { index = "nvidia" }
+isaaclab = { index = "nvidia" }
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com/"
+explicit = true
 
 [dependency-groups]
 dev = [
